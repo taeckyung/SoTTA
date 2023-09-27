@@ -67,15 +67,11 @@ def get_path():
 
 def attack_online(learner, current_num_sample):
     if conf.args.method == "SRC_FOR_TTA_ATTACK":  # for ablation
-        # temp_model_state = deepcopy(learner.net.state_dict()) # save model state before train
         ret_val = learner.train_online(current_num_sample, add_memory=True, evaluation=False)  # add memory FIFO
         if ret_val == TRAINED:  # if current_num_sample % update_every_x == 0
             learner.reset_purturb()  # reset pruturb to zero
-            # learner.net.load_state_dict(temp_model_state) # reset model
             for step in range(conf.args.tta_attack_step):
                 learner.tta_attack_train(current_num_sample, step)  # adding generated attack samples
-                # learner.train_online(current_num_sample, add_memory = False, evaluation = False)
-                # learner.net.load_state_dict(temp_model_state) # reset model for next testing step
 
             learner.tta_attack_update(current_num_sample)
             ret_val = learner.train_online(current_num_sample, add_memory=False, evaluation=False)  # train online

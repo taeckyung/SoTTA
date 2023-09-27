@@ -18,8 +18,8 @@ class SoTTA(DNN):
 
         for param in self.net.parameters():  # initially turn off requires_grad for all
             param.requires_grad = False
-        for module in self.net.modules():
 
+        for module in self.net.modules():
             if isinstance(module, nn.BatchNorm1d) or isinstance(module, nn.BatchNorm2d):
                 # https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm1d.html
 
@@ -35,11 +35,11 @@ class SoTTA(DNN):
                 module.weight.requires_grad_(True)
                 module.bias.requires_grad_(True)
 
-            elif isinstance(module, nn.InstanceNorm1d) or isinstance(module, nn.InstanceNorm2d):  # ablation study
+            elif isinstance(module, nn.InstanceNorm1d) or isinstance(module, nn.InstanceNorm2d): 
                 module.weight.requires_grad_(True)
                 module.bias.requires_grad_(True)
 
-            elif isinstance(module, nn.LayerNorm):  # language models
+            elif isinstance(module, nn.LayerNorm):  
                 module.weight.requires_grad_(True)
                 module.bias.requires_grad_(True)
 
@@ -64,9 +64,11 @@ class SoTTA(DNN):
         if current_num_sample > len(self.target_train_set[0]):
             return FINISHED
 
-        # Add a sample
+        # Get a sample
         feats, cls, dls = self.target_train_set
         current_sample = feats[current_num_sample - 1], cls[current_num_sample - 1], dls[current_num_sample - 1]
+        
+        # Add into memory
         if add_memory:
             self.fifo.add_instance(current_sample)  # for batch-based inference
 
@@ -91,7 +93,6 @@ class SoTTA(DNN):
                     pseudo_label = torch.argmax(predict, dim=1)
                     entropy = torch.sum(- predict * torch.log(predict + 1e-6), dim=1)
 
-                    # add into memory
                     for i, data in enumerate(f.unsqueeze(0)):
                         p_l = pseudo_label[i].item()
                         uncertainty = entropy[i].item()
@@ -108,7 +109,6 @@ class SoTTA(DNN):
                 self.log_loss_results('train_online', epoch=current_num_sample, loss_avg=self.previous_train_loss)
                 return SKIPPED
 
-        # if not conf.args.use_learned_stats  and evaluation: #batch-based inference
         if evaluation:
             self.evaluation_online(current_num_sample, self.fifo.get_memory())
 
@@ -145,7 +145,7 @@ class SoTTA(DNN):
     def step(self, loss_fn, feats=None):
         assert (feats is not None)
 
-        if conf.args.tta_attack_type:
+        if conf.args.tta_attack_type: # avoid attack error
             feats = feats.clone().detach()
 
         self.net.train()
