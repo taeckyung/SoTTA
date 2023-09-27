@@ -1,0 +1,27 @@
+.DS_Store
+.idea
+
+.vscode/launch.json
+
+*.txt
+*.pkl
+*.pyc
+*.tar
+*.csv
+online_eval.json
+
+tta_*.sh
+*.pt
+*.pdf
+*.ttf
+*.npy
+*.pptx
+
+cached_data
+dataset
+log
+
+print_acc_reset.py
+print_acc_temp.py
+print_acc_temp copy.py
+*.png
