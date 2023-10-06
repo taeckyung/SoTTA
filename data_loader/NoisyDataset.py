@@ -24,7 +24,12 @@ torch.cuda.set_device(conf.args.gpu_idx)  #
 NOISY_CLASS_IDX = 10000
 
 
-class NoisyDataset(torch.utils.data.Dataset):  # OOD dataset with base CIFAR10
+class NoisyDataset(torch.utils.data.Dataset):
+    """
+    Noisy data stream
+    Currently supports cifar10noisy, imagenetnoisy, and cifar100noisy
+    with noise data of original, cifar100, imagenet, mnist, uniform, and repeat.
+    """
     noisy_data_types = ["original", "divide", "repeat", "oneclassrepeat", "cifar100", "cifar100c",
                         "gaussian", "uniform", "mnist", "cifar10", "imagenet"]
 
@@ -127,6 +132,9 @@ class NoisyDataset(torch.utils.data.Dataset):  # OOD dataset with base CIFAR10
         self.preprocessing()
 
     def resample(self, data: np.ndarray, size: int):
+        """
+        Resample the input data to corresponding size.
+        """
         if size == len(data):
             return data
         elif size < len(data):
@@ -195,7 +203,7 @@ class NoisyDataset(torch.utils.data.Dataset):  # OOD dataset with base CIFAR10
 
             noisy_stream = data10
 
-        elif self.noisy_data == "imagenet":
+        elif self.noisy_data == "imagenet":  # imagenet validation set
             path = f'{self.file_path_imagenet}/origin/Data/CLS-LOC/val/'
 
             tr = transforms.Compose([
@@ -208,26 +216,24 @@ class NoisyDataset(torch.utils.data.Dataset):  # OOD dataset with base CIFAR10
             dataset = ImageFolder(path, transform=tr)
             dataloader = torch.utils.data.DataLoader(dataset, batch_size=32, shuffle=False, pin_memory=False,
                                                      drop_last=False)
-            # transformed_dataset = []
-            for b_i, data in enumerate(
-                    dataloader):  # must be loaded from dataloader, due to transform in the __getitem__()
+            
+            for b_i, data in enumerate(dataloader):  # must be loaded from dataloader, due to transform in the __getitem__()
                 feat, _ = data
                 # convert a batch of tensors to list, and then append to our list one by one
                 feats = torch.unbind(feat, dim=0)
                 for i in range(len(feats)):
-                    # transformed_dataset.append((feats[i], cls[i]))
                     features.append(feats[i])
 
             noisy_stream = np.stack(features)
             if self.noisy_data_size:
                 noisy_stream = noisy_stream[random.sample(range(len(noisy_stream)), self.noisy_data_size)]
 
-        elif self.noisy_data == "gaussian":  # gauss50k, gauss150k
+        elif self.noisy_data == "gaussian":  # gaussian noise
             gaussian_img = np.random.normal(0, 1, size=(self.noisy_data_size, 3, self.img_size, self.img_size))
             norm_gaussian_img = np.float32((gaussian_img - np.min(gaussian_img)) / np.ptp(gaussian_img))
             noisy_stream = norm_gaussian_img
 
-        elif self.noisy_data == "repeat":
+        elif self.noisy_data == "repeat":  # repeat base dataset
             noisy_stream = self.base_dataset.features
 
         elif self.noisy_data == "uniform":  # uniform50
@@ -264,7 +270,7 @@ class NoisyDataset(torch.utils.data.Dataset):  # OOD dataset with base CIFAR10
             self.dataset = self.base_dataset.dataset
         else:
             noisy_dataset = torch.utils.data.TensorDataset(
-                torch.from_numpy(noisy_stream),  # resize for resnet
+                torch.from_numpy(noisy_stream),  
                 torch.from_numpy(NOISY_CLASS_IDX * np.ones((len(noisy_stream)))),
                 torch.from_numpy(np.array(np.zeros((len(noisy_stream))))))
 
