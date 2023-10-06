@@ -37,7 +37,7 @@ def process_path(args, path):
     for (path, _, _) in os.walk(path):
         for corr in CORRUPTION_LIST:
             for seed in args.seed:
-                for noise in args.noise:
+                for noise in args.noisy_type:
                     if method == 'Src':
                         pattern_of_path = f'.*{corr}.*{noise}.*/.*{args.prefix}_.*{seed}.*'
                     elif 'repeat' in noise:  # attack
@@ -111,7 +111,7 @@ if __name__ == '__main__':
         f"LOG_PREFIX: {args.prefix}\n"
         f"METHOD: {args.method}\n"
         f"SEED: {args.seed}\n"
-        f"Noise: {args.noise}\n"
+        f"Noise: {args.noisy_type}\n"
         f"Dist: {args.dist}"
     )
 
