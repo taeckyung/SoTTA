@@ -38,7 +38,7 @@ To run our codes, you first need to download at least one of the datasets. Run t
     $ . download_cifar10c.sh        #download CIFAR10/CIFAR10-C datasets
     $ . download_cifar100c.sh       #download CIFAR100/CIFAR100-C datasets
 
-Also, you can download the following datasets:
+Also, you can download the following datasets and locate them in the `./dataset` folder (create the folder if not exists):
 
 - ImageNet-C: https://zenodo.org/record/2235448
 - MNIST-C: https://zenodo.org/record/3239543
@@ -47,7 +47,7 @@ Also, you can download the following datasets:
 
 ### Prepare Source model
 
-"Source model" refers to a model that is trained with the source (clean) data only. Source models are required to all methods to perform test-time adaptation. You can generate source models via:
+"Source model" refers to a model that is trained with the source (clean) data only. Source models are required for all methods to perform test-time adaptation. You can generate source models via:
 
     $ . train_src.sh                 #generate source models for CIFAR10 as default.
 
@@ -57,7 +57,7 @@ You can specify which dataset to use in the script file.
 
 Given source models are available, you can run TTA via:
 
-    $ . tta.sh                       #Run SoTTA for tta-target: CIFAR10-C, noisy-stream: MNIST as default.
+    $ . tta.sh                       #run SoTTA for tta-target: CIFAR10-C, noisy-stream: MNIST as default.
 
 You can specify which dataset and which method in the script file.
 
@@ -71,7 +71,7 @@ In addition to console outputs, the result will be saved as a log file with the 
 
 In order to print the classification accuracies(%) on the test set, run the following commands:
 
-    $ python print_acc.py --method SoTTA    #print the result of the specified condition.
+    $ python print_acc.py --method SoTTA    #prints the result of the specified condition.
 
 ## Tested Environment
 
