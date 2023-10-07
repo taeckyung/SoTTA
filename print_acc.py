@@ -15,7 +15,7 @@ METHOD_LIST = ["Src", "TENT", "PseudoLabel", "BN_Stats", "SAR", "RoTTA", "CoTTA"
 
 BASE_DATASET = "cifar10noisy"
 
-LOG_PREFIX = "eval_results_neurips_final"
+LOG_PREFIX = "eval_results"
 
 SEED = [0, 1, 2]
 
