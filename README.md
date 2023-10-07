@@ -13,7 +13,7 @@ Sorn Chottananurak, and
 ## Installation Guide
 
 1. Download or clone our repository.
-2. Set up a python environment using conda (see below).
+2. Set up a Python environment using conda (see below).
 3. Prepare datasets (see below).
 4. Run the code (see below).
 
@@ -22,7 +22,7 @@ Sorn Chottananurak, and
 We use [Conda environment](https://docs.conda.io/).
 You can get conda by installing [Anaconda](https://www.anaconda.com/) first.
 
-We share our python environment that contains all required python packages. Please refer to the `./sotta.yml` file
+We share our Python environment that contains all required Python packages. Please refer to the `./sotta.yml` file.
 
 You can import our environment using conda:
 
@@ -38,7 +38,10 @@ To run our codes, you first need to download at least one of the datasets. Run t
     $ . download_cifar10c.sh        #download CIFAR10/CIFAR10-C datasets
     $ . download_cifar100c.sh       #download CIFAR100/CIFAR100-C datasets
 
-Also, you can download ImageNet-C at: https://zenodo.org/record/2235448 
+Also, you can download following datasets:
+
+- ImageNet-C: https://zenodo.org/record/2235448
+- MNIST-C: https://zenodo.org/record/3239543
 
 ## Run
 
@@ -66,13 +69,13 @@ In addition to console outputs, the result will be saved as a log file with the 
 
 ### Obtaining results
 
-In order to print the classification accuracies(%) on test set, run the following commands:
+In order to print the classification accuracies(%) on the test set, run the following commands:
 
-    $ python print_acc.py --dataset cifar10noisy --method SoTTA --seed 0 1 2    #print the result of the specified condition.
+    $ python print_acc.py --method SoTTA    #print the result of the specified condition.
 
 ## Tested Environment
 
-We tested our codes under this environment.
+We tested our codes in this environment.
 
 - OS: Ubuntu 20.04.4 LTS
 - GPU: NVIDIA GeForce RTX 3090
