@@ -38,7 +38,7 @@ To run our codes, you first need to download at least one of the datasets. Run t
     $ . download_cifar10c.sh        #download CIFAR10/CIFAR10-C datasets
     $ . download_cifar100c.sh       #download CIFAR100/CIFAR100-C datasets
 
-Also, you can download following datasets:
+Also, you can download the following datasets:
 
 - ImageNet-C: https://zenodo.org/record/2235448
 - MNIST-C: https://zenodo.org/record/3239543
