@@ -50,8 +50,8 @@ class FIFO:
 
 class HUS:
     def __init__(self, capacity, threshold=None):
-        self.data = [[[], [], [], [], []] for _ in
-                     range(conf.args.opt['num_class'])]  # feat, pseudo_cls, domain, conf, weight
+        self.data = [[[], [], [], []] for _ in
+                     range(conf.args.opt['num_class'])]  # feat, pseudo_cls, domain, conf
         self.counter = [0] * conf.args.opt['num_class']
         self.marker = [''] * conf.args.opt['num_class']
         self.capacity = capacity
@@ -89,7 +89,7 @@ class HUS:
 
         tmp_data = [[], [], []]
         for data_per_cls in data:
-            feats, cls, dls, _, _ = data_per_cls
+            feats, cls, dls, _ = data_per_cls
             tmp_data[0].extend(feats)
             tmp_data[1].extend(cls)
             tmp_data[2].extend(dls)
@@ -120,7 +120,6 @@ class HUS:
             is_add = self.remove_instance(cls)
 
         if is_add:
-            instance.append(1 / (instance[3] + 1e-3))  # weight
             for i, dim in enumerate(self.data[cls]):
                 dim.append(instance[i])
 
@@ -143,24 +142,24 @@ class HUS:
         else:
             return 0
 
-    def get_target_index(self, weight_data):
-        return random.randrange(0, len(weight_data))
+    def get_target_index(self, data):
+        return random.randrange(0, len(data))
 
     def remove_instance(self, cls):
         largest_indices = self.get_largest_indices()
         if cls not in largest_indices:  # instance is stored in the place of another instance that belongs to the largest class
             largest = random.choice(largest_indices)  # select only one largest class
-            tgt_idx = self.get_target_index(self.data[largest][4])
+            tgt_idx = self.get_target_index(self.data[largest][0])
             for dim in self.data[largest]:
                 dim.pop(tgt_idx)
         else:  # replaces a randomly selected stored instance of the same class
-            tgt_idx = self.get_target_index(self.data[cls][4])
+            tgt_idx = self.get_target_index(self.data[cls][0])
             for dim in self.data[cls]:
                 dim.pop(tgt_idx)
         return True
 
     def reset_value(self, feats, cls, aux):
-        self.data = [[[], [], [], [], []] for _ in range(conf.args.opt['num_class'])]  # feat, pseudo_cls, domain, conf, weight
+        self.data = [[[], [], [], []] for _ in range(conf.args.opt['num_class'])]  # feat, pseudo_cls, domain, conf
 
         for i in range(len(feats)):
             tgt_idx = cls[i]
@@ -168,7 +167,6 @@ class HUS:
             self.data[tgt_idx][1].append(cls[i])
             self.data[tgt_idx][2].append(0)
             self.data[tgt_idx][3].append(aux[i])
-            self.data[tgt_idx][4].append(1 / (aux[i] + 1e-3))
 
 
 class ConfFIFO:
