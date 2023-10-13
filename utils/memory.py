@@ -149,11 +149,11 @@ class HUS:
         largest_indices = self.get_largest_indices()
         if cls not in largest_indices:  # instance is stored in the place of another instance that belongs to the largest class
             largest = random.choice(largest_indices)  # select only one largest class
-            tgt_idx = self.get_target_index(self.data[largest][0])
+            tgt_idx = self.get_target_index(self.data[largest][3])
             for dim in self.data[largest]:
                 dim.pop(tgt_idx)
         else:  # replaces a randomly selected stored instance of the same class
-            tgt_idx = self.get_target_index(self.data[cls][0])
+            tgt_idx = self.get_target_index(self.data[cls][3])
             for dim in self.data[cls]:
                 dim.pop(tgt_idx)
         return True
