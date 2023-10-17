@@ -8,7 +8,7 @@ This is the official PyTorch Implementation of
 Sorn Chottananurak, and 
 [Sung-Ju Lee](https://sites.google.com/site/wewantsj/) (* Equal contribution).
 
-[[ OpenReview ]](https://openreview.net/forum?id=3bdXag2rUd) [[ arXiv ]]() [[ Website ]](https://nmsl.kaist.ac.kr/projects/sotta/)
+[[ OpenReview ]](https://openreview.net/forum?id=3bdXag2rUd) [[ arXiv ]](https://arxiv.org/abs/2310.10074) [[ Website ]](https://nmsl.kaist.ac.kr/projects/sotta/)
 
 ## Installation Guide
 
