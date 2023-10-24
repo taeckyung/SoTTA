@@ -3,13 +3,33 @@ import os
 import re
 import argparse
 
+import numpy as np
 import pandas as pd
 from multiprocessing import Pool
 from functools import partial
+from texttable import Texttable
 
 CORRUPTION_LIST = ["gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur", "glass_blur", "motion_blur",
                    "zoom_blur", "snow", "frost", "fog", "brightness", "contrast", "elastic_transform", "pixelate",
                    "jpeg_compression"]
+
+CORRUPTION_DICT = {
+    "gaussian_noise": "Gau.", 
+    "shot_noise": "Shot", 
+    "impulse_noise": "Imp.", 
+    "defocus_blur": "Def.", 
+    "glass_blur": "Gla.", 
+    "motion_blur": "Mot.",
+    "zoom_blur": "Zoom", 
+    "snow": "Snow", 
+    "frost": "Fro.", 
+    "fog": "Fog", 
+    "brightness": "Brit.", 
+    "contrast": "Cont.", 
+    "elastic_transform": "Elas.", 
+    "pixelate": "Pix",
+    "jpeg_compression": "JPEG"
+}
 
 METHOD_LIST = ["Src", "TENT", "PseudoLabel", "BN_Stats", "SAR", "RoTTA", "CoTTA", "LAME", "MEMO", "SoTTA", "EATA"]
 
@@ -62,20 +82,63 @@ def process_path(args, path):
                                 pass
     return result
 
+def pretty_print(results, noise_list, seed_list):
+    print(f'Classification accuracy(%) of method {args.method[0]}\n')
+
+    t = Texttable(max_width=160)
+    t.set_precision(1)
+    t.set_deco(t.HEADER)
+
+
+    for i, noise_type in enumerate(noise_list):
+        if len(seed_list) > 1:
+            accs = []
+
+        for j, seed in enumerate(seed_list):
+
+            if i == 0 and j == 0:
+                t_head = ["Noise", "Seed"] + [CORRUPTION_DICT[k] for k in list(results[0][f"{seed}_{noise_type}"].columns)] + ["AVG"]
+                t.header(t_head)
+            
+            if j == 0:
+                acc_values = [noise_type, seed]
+            else:
+                acc_values = ["", seed]
+
+            result = pd.concat([results[i][f"{seed}_{noise_type}"] for i in range(len(results))]).values
+            if len(result) == 0:
+                continue
+
+            acc_values += list(result[0])
+            acc_values += [np.mean(result[0])]
+            t.add_row(acc_values)
+
+            accs.append(result[0])
+        
+        # avg
+        if len(seed_list) > 1 and len(accs) > 1:
+            accs = np.asarray(accs)
+            acc_mean = np.mean(accs, axis=0).tolist()
+            acc_values = ["", "AVG"] + acc_mean + [np.mean(acc_mean)]
+            t.add_row(acc_values)
+
+    print(t.draw())
+    print('\n')
+
+    
 
 def main(args):
+
+    print("Processing data logs...\n")
+
     root = 'log/' + args.dataset
     paths = [os.path.join(root, f"{method}_noisy") for method in args.method]
+
     with Pool(processes=len(paths)) as p:
         func = partial(process_path, args)
         results = p.map(func, paths)
 
-    for noisy_type in args.noisy_type:
-        for seed in args.seed:
-            print(f"SEED:{seed}, NOISY_TYPE: {noisy_type}")
-            result = pd.concat([results[i][f"{seed}_{noisy_type}"] for i in range(len(results))])
-            print(result.to_csv())
-
+    pretty_print(results, args.noisy_type, args.seed)
 
 def parse_arguments():
     """Command line parse."""
