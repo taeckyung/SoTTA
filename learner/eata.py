@@ -14,7 +14,7 @@ class EATA(DNN):
     def __init__(self, *args, **kwargs):
         super(EATA, self).__init__(*args, **kwargs)
 
-        fisher_dataset = NoisyDataset(base=conf.args.dataset, domains=['test'], transform='val',
+        fisher_dataset = NoisyDataset(base=conf.args.dataset, domains=[conf.args.tgt], transform='val',
                                       noisy_data=conf.args.noisy_type, noisy_data_size=conf.args.noisy_size,
                                       noisy_data_class=conf.args.noisy_class)
         fisher_dataset = \
