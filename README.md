@@ -47,7 +47,10 @@ Also, you can download the following datasets and locate them in the `./dataset`
 
 ### Prepare Source model
 
-"Source model" refers to a model that is trained with the source (clean) data only. Source models are required for all methods to perform test-time adaptation. You can generate source models via:
+"Source model" refers to a model that is trained with the source (clean) data only. Source models are required for all methods to perform test-time adaptation. 
+We provide the pretrained model for CIFAR10/CIFAR100 at [GDrive Link](https://drive.google.com/file/d/1PWKx5k5ePfw6XDgauPy-4J8riGXImzda/view?usp=sharing).
+
+Also, you can generate source models via:
 
     $ . train_src.sh                 #generate source models for CIFAR10 as default.
 
