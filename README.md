@@ -48,7 +48,7 @@ Also, you can download the following datasets and locate them in the `./dataset`
 ### Prepare Source model
 
 "Source model" refers to a model that is trained with the source (clean) data only. Source models are required for all methods to perform test-time adaptation. 
-We provide the pretrained model for CIFAR10/CIFAR100 with three random seeds (0,1,2) at [GDrive Link](https://drive.google.com/file/d/1PWKx5k5ePfw6XDgauPy-4J8riGXImzda/view?usp=sharing). After extracting `log.zip`, put this folder on the project rool directory, i.e., `SoTTA/log`. 
+We provide the pretrained model for CIFAR10/CIFAR100 with three random seeds (0,1,2) at [GDrive Link](https://drive.google.com/file/d/1PWKx5k5ePfw6XDgauPy-4J8riGXImzda/view?usp=sharing). After extracting `log.zip`, put this folder to the project root directory, i.e., `SoTTA/log`. 
 
 Alternatively, you can train source models via:
 
