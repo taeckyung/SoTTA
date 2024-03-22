@@ -1,7 +1,6 @@
 .DS_Store
 .idea
 
-.vscode/launch.json
 
 *.txt
 *.pkl
@@ -25,3 +24,7 @@ print_acc_reset.py
 print_acc_temp.py
 print_acc_temp copy.py
 *.png
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
+branch_structure.json

@@ -14,7 +14,7 @@ class HLoss(nn.Module):
     def forward(self, x):
         softmax = F.softmax(x / self.temp_factor, dim=1)
         entropy = -softmax * torch.log(softmax + 1e-6)
-        b = entropy.mean()
+        b = entropy.sum(dim=1).mean()
 
         return b
 
